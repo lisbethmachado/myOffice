@@ -1,3 +1,10 @@
 --DATABASE
+CREATE DATABASE myOffice_db;
+USE myOffice_db;
 
 --TABLES
+CREATE TABLE departments (
+id INT NOT NULL,
+name VARCHAR(30) NOT NULL,
+PRIMARY KEY (id)
+);
