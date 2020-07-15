@@ -15,19 +15,83 @@ connection.connect((err) => {
     }
     // run the start function after the connection is made to prompt the user
     else
-    return start();
+        return start();
 });
 
 // function which prompts the user for what action they should take
 function start() {
-    console.log("Connection successful!")
+    return inquirer
+        .prompt({
+            name: "menu",
+            type: "list",
+            message: "What would you like to do?",
+            choices: ["View all employees", "Add new employee", "View all roles", "Add new role", "View all departments", "Add new department", "EXIT"],
+        })
+        .then((answer) => {
+            // based on their answer, either call the bid or the post functions
+            if (answer.menu === "Add new department") {
+                return addDepartment();
+            }
+            if (answer.menu === "Add new role") {
+                return addRole();
+            }
+            if (answer.menu === "Add new employee") {
+                return addEmployee();
+            }
+            else {
+                connection.end();
+            }
+        })
+        .catch((error) => {
+            console.log(error);
+            process.exit(1);
+        });
 }
 
-// Start menu
-// - Add new department
-// - View Departments
-// - Add new role
-// - View Roles
-// - Add new Employee
-// - View employee
-// - Update employee role
+function addDepartment() {
+    return inquirer
+    .prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "What is the name of the new department?",
+      },
+    ])
+    .then(function (answer) {
+           console.log("Adding " + answer.name + " department...\nSuccess!\n============================");
+           start();
+         });
+       }
+function addRole() {
+    return inquirer
+    .prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "What is the name of the new role?",
+      },
+    ])
+    .then(function (answer) {
+           console.log("Adding " + answer.name + " role...\nSuccess!\n============================");
+           start();
+         });
+       }
+
+       function addEmployee() {
+        return inquirer
+        .prompt([
+          {
+            name: "name",
+            type: "input",
+            message: "What is the name of the new employee?",
+          },
+        ])
+        .then(function (answer) {
+               console.log("Adding " + answer.name + " employee...\nSuccess!\n============================");
+               start();
+             });
+           }
+
+// function update() {
+//     console.log("Small successes!")
+// }
