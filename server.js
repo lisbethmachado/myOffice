@@ -47,47 +47,47 @@ function start() {
 
 function addDepartment() {
     return inquirer
-    .prompt([
-      {
-        name: "name",
-        type: "input",
-        message: "What is the name of the new department?",
-      },
-    ])
-    .then(function (answer) {
-           console.log("Adding " + answer.name + " department...\nSuccess!\n============================");
-           start();
-         });
-       }
-function addRole() {
-    return inquirer
-    .prompt([
-      {
-        name: "name",
-        type: "input",
-        message: "What is the name of the new role?",
-      },
-    ])
-    .then(function (answer) {
-           console.log("Adding " + answer.name + " role...\nSuccess!\n============================");
-           start();
-         });
-       }
-
-       function addEmployee() {
-        return inquirer
         .prompt([
-          {
-            name: "name",
-            type: "input",
-            message: "What is the name of the new employee?",
-          },
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the new department?",
+            },
         ])
         .then(function (answer) {
-               console.log("Adding " + answer.name + " employee...\nSuccess!\n============================");
-               start();
-             });
-           }
+            console.log("Adding " + answer.name + " department...\nSuccess!\n============================");
+            start();
+        });
+}
+function addRole() {
+    return inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the new role?",
+            },
+        ])
+        .then(function (answer) {
+            console.log("Adding " + answer.name + " role...\nSuccess!\n============================");
+            start();
+        });
+}
+
+function addEmployee() {
+    return inquirer
+        .prompt([
+            {
+                name: "name",
+                type: "input",
+                message: "What is the name of the new employee?",
+            },
+        ])
+        .then(function (answer) {
+            console.log("Adding " + answer.name + " employee...\nSuccess!\n============================");
+            start();
+        });
+}
 
 // function update() {
 //     console.log("Small successes!")
