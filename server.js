@@ -13,12 +13,10 @@ connection.connect((err) => {
     if (err) {
         throw err;
     }
-    // run the start function after the connection is made to prompt the user
     else
         return start();
 });
 
-// function which prompts the user for what action they should take
 function start() {
     return inquirer
         .prompt({
@@ -28,7 +26,6 @@ function start() {
             choices: ["View all employees", "Add new employee", "View all roles", "Add new role", "View all departments", "Add new department", "EXIT"],
         })
         .then((answer) => {
-            // based on their answer, either call the bid or the post functions
             if (answer.menu === "Add new department") {
                 return addDepartment();
             }
