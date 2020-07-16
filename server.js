@@ -53,13 +53,13 @@ function start() {
             if (answer.menu === ADD_EMPLOYEES) {
                 return addEmployee();
             } if (answer.menu === VIEW_DEPARTMENTS) {
-                return viewDepartment();
+                return viewDepartments();
             }
             if (answer.menu === VIEW_ROLES) {
-                return viewRole();
+                return viewRoles();
             }
             if (answer.menu === VIEW_EMPLOYEES) {
-                return viewEmployee();
+                return viewEmployees();
             }
             if (answer.menu === UPDATE_EMPLOYEE) {
                 return updateEmployeeRole();
@@ -123,7 +123,7 @@ function addEmployee() {
         });
 }
 
-function viewEmployee() {
+function viewEmployees() {
     // query db for students joined with classes and departments
     const sqlString = `
     SELECT CONCAT(employees.firstName, " ", employees.lastName) AS Name,
@@ -132,6 +132,44 @@ function viewEmployee() {
   FROM employees
   INNER JOIN roles ON employees.roleId = roles.id
   INNER JOIN departments ON roles.deptId = departments.id;
+      `;
+    connection.query(sqlString, (error, results) => {
+        // display the results a formatted table
+        if (error) {
+            throw error;
+        } else
+            console.table(results);
+        // go back to the menu
+        start();
+    });
+}
+
+function viewRoles() {
+    // query db for students joined with classes and departments
+    const sqlString = `
+    SELECT 
+    roles.title AS Role,
+    roles.salary AS Salary,
+    departments.title AS Department
+  FROM roles
+  INNER JOIN departments ON roles.deptId = departments.id;
+      `;
+    connection.query(sqlString, (error, results) => {
+        // display the results a formatted table
+        if (error) {
+            throw error;
+        } else
+            console.table(results);
+        // go back to the menu
+        start();
+    });
+}
+
+function viewDepartments() {
+    // query db for students joined with classes and departments
+    const sqlString = `
+    SELECT DISTINCT departments.id AS ID, 
+    departments.title AS Department FROM departments;
       `;
     connection.query(sqlString, (error, results) => {
         // display the results a formatted table
