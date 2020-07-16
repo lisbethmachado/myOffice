@@ -24,7 +24,13 @@ function start() {
             name: "menu",
             type: "list",
             message: "What would you like to do?",
-            choices: ["View all employees", "Add new employee", "View all roles", "Add new role", "View all departments", "Add new department", "EXIT"],
+            choices: ["View all employees",
+                     "Add new employee",
+                     "View all roles",
+                     "Add new role",
+                     "View all departments",
+                     "Add new department",
+                     "EXIT"],
         })
         .then((answer) => {
             if (answer.menu === "Add new department") {
@@ -35,6 +41,14 @@ function start() {
             }
             if (answer.menu === "Add new employee") {
                 return addEmployee();
+            } if (answer.menu === "View all departments") {
+                return viewDepartment();
+            }
+            if (answer.menu === "View all roles") {
+                return viewRole();
+            }
+            if (answer.menu === "View all employees") {
+                return viewEmployee();
             }
             else {
                 connection.end();
@@ -50,13 +64,13 @@ function addDepartment() {
     return inquirer
         .prompt([
             {
-                name: "name",
+                name: "title",
                 type: "input",
                 message: "What is the name of the new department?",
             },
         ])
         .then(function (answer) {
-            console.log("Adding " + answer.name + " department...\nSuccess!\n============================");
+            console.log("Adding " + answer.title + " department...\nSuccess!\n============================");
             start();
         });
 }
@@ -64,13 +78,13 @@ function addRole() {
     return inquirer
         .prompt([
             {
-                name: "name",
+                name: "title",
                 type: "input",
                 message: "What is the name of the new role?",
             },
         ])
         .then(function (answer) {
-            console.log("Adding " + answer.name + " role...\nSuccess!\n============================");
+            console.log("Adding " + answer.title + " role...\nSuccess!\n============================");
             start();
         });
 }
@@ -79,17 +93,46 @@ function addEmployee() {
     return inquirer
         .prompt([
             {
-                name: "name",
+                name: "firstName",
+                type: "input",
+                message: "What is the name of the new employee?",
+            },
+            {
+                name: "lastName",
                 type: "input",
                 message: "What is the name of the new employee?",
             },
         ])
         .then(function (answer) {
-            console.log("Adding " + answer.name + " employee...\nSuccess!\n============================");
+            console.log("Adding " + answer.firstName + answer.lastName + " employee...\nSuccess!\n============================");
             start();
         });
 }
 
+function viewEmployee() {
+    // query db for students joined with classes and departments
+    const sqlString = `
+    SELECT CONCAT(employees.firstName, " ", employees.lastName) AS Name,
+    roles.title AS Role,
+    departments.title AS Department
+  FROM employees
+  INNER JOIN roles ON employees.roleId = roles.id
+  INNER JOIN departments ON roles.deptId = departments.id;
+      `;
+    connection.query(sqlString, (error, results) => {
+      // display the results a formatted table
+      if (error) {
+        throw error;
+      }
+      console.table(results);
+      // go back to the menu
+      start();
+    });
+  }
+
+
 // function update() {
 //     console.log("Small successes!")
 // }
+
+//connection.query sql strin, values, callback

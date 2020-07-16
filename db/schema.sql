@@ -4,7 +4,28 @@ USE myOffice_db;
 
 --TABLES
 CREATE TABLE departments (
-id INT NOT NULL,
-name VARCHAR(30) NOT NULL,
+id INT AUTO_INCREMENT NOT NULL,
+title VARCHAR(30) NOT NULL,
 PRIMARY KEY (id)
+);
+
+CREATE TABLE roles (
+id INT AUTO_INCREMENT NOT NULL,
+title VARCHAR(30) NOT NULL,
+salary DECIMAL,
+deptId INT NOT NULL,
+PRIMARY KEY (id),
+FOREIGN KEY (deptId)
+ REFERENCES departments(id)
+);
+
+CREATE TABLE employees (
+id INT AUTO_INCREMENT NOT NULL,
+firstName VARCHAR(30) NOT NULL,
+lastName VARCHAR(30) NOT NULL,
+roleId INT,
+managerId INT,
+PRIMARY KEY (id),
+FOREIGN KEY (roleId)
+ REFERENCES roles (id)
 );
