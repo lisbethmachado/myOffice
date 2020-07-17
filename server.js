@@ -83,9 +83,22 @@ function addDepartment() {
                 message: "What is the title of the new department?",
             },
         ])
-        .then(function (answer) {
-            console.log("Adding " + answer.title + " department...\nSuccess!\n============================");
-            start();
+        .then((answer) => {
+            // when finished prompting, insert a new item into the db with that info
+            return connection.query(
+                "INSERT INTO departments SET VALUES ?",
+                //   {
+                //     title: answer.title,
+                //   },
+                (err) => {
+                    if (err) {
+                        throw err;
+                    }
+                    console.log("Added new department " + answer.title + "...\nSuccess!\n============================");
+                    // re-prompt the user for if they want to bid or post
+                    return start();
+                }
+            );
         });
 }
 function addRole() {
@@ -104,24 +117,60 @@ function addRole() {
 }
 
 function addEmployee() {
-    return inquirer
-        .prompt([
-            {
-                name: "firstName",
-                type: "input",
-                message: "What is the first name of the new employee?",
-            },
-            {
-                name: "lastName",
-                type: "input",
-                message: "What is the last name of the new employee?",
-            },
-        ])
-        .then(function (answer) {
-            console.log("Adding " + answer.firstName + answer.lastName + " employee...\nSuccess!\n============================");
-            start();
-        });
-}
+    return connection.query("SELECT * FROM roles", (err, results) => {
+        if (err) {
+            throw err;
+        }
+        const roles = results.map((row) => row.title);
+        // once you have the items, prompt the user for which they'd like to bid on
+        return inquirer
+            .prompt([
+                {
+                    name: "firstName",
+                    type: "input",
+                    message: "What is the first name of the new employee?",
+                },
+                {
+                    name: "lastName",
+                    type: "input",
+                    message: "What is the last name of the new employee?",
+                },
+                {
+                    name: "roleId",
+                    type: "list",
+                    choices: roles,
+                    message: "What role would you like to assign?",
+                },
+            ])
+            .then(function (choices) {
+                return connection.query(
+                    `INSERT INTO employees CONCAT(employees.firstName, " ", employees.lastName),
+                    SET VALUES ?`,
+                    [
+                      {
+                        firstName: choices.firstName,
+                      },
+                      {
+                        lastName: choices.lastName,
+                      },
+                      {
+                        roleId: choices.lastName,
+                      },
+                    ],
+                    (error) => {
+                      if (error) {
+                        throw err;
+                      }
+                      console.log("Added new employee " + choices.firstName + " " + choices.lastName + "...\nSuccess!\n============================");
+                      return start();
+                    }
+                );
+
+
+            });
+    
+});
+};
 
 function viewEmployees() {
     // query db for students joined with classes and departments
